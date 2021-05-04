@@ -1,0 +1,336 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Atlas",
+        "description": "Essa é a documentação sobre o Atlas API",
+        "version": "1.0.0",
+        "contact": {
+            "email": "igorcezatte13@gmail.com"
+        }
+    },
+    "tags":[{
+        "name": "Users",
+        "description": "Gerenciamento de usuários"
+    }],
+    "paths": {
+        "/users": {
+            "post": {
+                "tags": ["Users"],
+                "summary": "Cria um novo usuário",
+                "requestBody": {
+                    "required": true,
+                    "description": "Campos obrigatórios para criação de um usuário",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    }
+                                },
+                                "example": {
+                                    "name": "Igor Cezatte",
+                                    "email": "igorcezatte@dev.com"
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Criação efetuada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "admin": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "id":{
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
+                                        "name":{
+                                            "type": "string",
+                                            "example": "Igor"
+                                        },
+                                        "email":{
+                                            "type": "string",
+                                            "format": "email",
+                                            "example": "igorcezatte@dev.com"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Email já está em uso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "error": "User already exists"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": ["Users"],
+                "summary": "Lista todos os usuários",
+                "description": "Usuários admnistradores podem obter a lista de usuários da aplicação",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Lista obtida com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "admin": {
+                                            "type": "boolean"
+                                        },
+                                        "id":{
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
+                                        "name":{
+                                            "type": "string",
+                                            "example": "Igor Cezatte"
+                                        },
+                                        "email":{
+                                            "type": "string",
+                                            "format": "email",
+                                            "example": "igorcezatte@dev.com"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "example": [
+                                        {
+                                            "admin": true,
+                                            "id": "bbfd0f84-dd78-4e63-bf5a-6ce4d9e5f8d6",
+                                            "name": "Igor Cezatte",
+                                            "email": "igorcezatte@dev.com",
+                                            "created_at": "2021-05-03T14:23:34.286Z",
+                                            "updated_at": "2021-05-03T14:23:34.286Z"
+                                        },{
+                                            "admin": false,
+                                            "id": "7a16f7c2-187e-487d-b9ec-ba8a5ecd3371",
+                                            "name": "Iara Fantin",
+                                            "email": "iara@advogata.com.br",
+                                            "created_at": "d2021-05-03T14:23:34.286Z",
+                                            "updated_at": "2021-05-03T14:23:34.286Z"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Usuário não é admnistrador",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "error": "You cannot get the list"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{user_id}": {
+            "get": {
+                "tags": ["Users"],
+                "summary": "Retorna usuário específico",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "required": true,
+                        "description": "Id do usuário",
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Busca realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "admin": {
+                                            "type": "boolean"
+                                        },
+                                        "id":{
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
+                                        "name":{
+                                            "type": "string",
+                                            "example": "Igor Cezatte"
+                                        },
+                                        "email":{
+                                            "type": "string",
+                                            "format": "email",
+                                            "example": "igorcezatte@dev.com"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "error": "User not found"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "users/{user_id}/admin": {
+            "patch": {
+                "tags": ["Users"],
+                "summary": "Torna um usuário adminstrador",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "in": "path"
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Operação realizada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "admin": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "id":{
+                                            "type": "string",
+                                            "format": "uuid"
+                                        },
+                                        "name":{
+                                            "type": "string",
+                                            "example": "RocketSeat"
+                                        },
+                                        "email":{
+                                            "type": "string",
+                                            "format": "email",
+                                            "example": "igorcezatte@dev.com"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Usuário não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "example": {
+                                        "error": "User not found"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
